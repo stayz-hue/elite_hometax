@@ -146,20 +146,18 @@ body{font-family:'Pretendard',-apple-system,'Noto Sans KR',sans-serif;background
         </div>
       </div>
       <div class="form-group"><label class="form-label">휴대폰번호</label><input class="form-input" type="tel" id="inc-phone" placeholder="01012345678" inputmode="numeric"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">통신사</label>
+      <div class="form-group"><label class="form-label">간편인증</label>
+          <select class="form-input" id="inc-auth" onchange="toggleTelco()"><option value="kakao">카카오톡</option><option value="pass">PASS</option><option value="toss">토스</option><option value="naver">네이버</option><option value="kb">KB스타뱅킹</option><option value="shinhan">신한인증서</option></select>
+      </div>
+      <div class="form-row hidden" id="inc-telco-wrap">
+        <div class="form-group"><label class="form-label">통신사 <span style="font-size:10px;color:var(--hint);font-weight:400;">(PASS 인증 필수)</span></label>
           <select class="form-input" id="inc-telco"><option value="S">SKT</option><option value="K">KT</option><option value="L">LG U+</option></select>
-        </div>
-        <div class="form-group"><label class="form-label">간편인증</label>
-          <select class="form-input" id="inc-auth"><option value="kakao">카카오톡</option><option value="pass">PASS</option><option value="toss">토스</option><option value="naver">네이버</option><option value="kb">KB스타뱅킹</option><option value="shinhan">신한인증서</option></select>
         </div>
       </div>
       <button class="btn btn-primary" id="inc-a-btn" onclick="incStart()">간편인증 요청</button>
       <div class="error-msg" id="inc-a-err"></div>
       <div class="security-note"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M7 1L2 3v4c0 3 2.2 5.4 5 6 2.8-.6 5-3 5-6V3L7 1z" stroke="#1c2b4a" stroke-width="1.2" stroke-linejoin="round"/></svg>입력 정보는 홈택스 인증에만 사용되며 저장하지 않습니다.</div>
-      <div class="divider">홈택스 계정이 없으신가요?</div>
-      <button class="btn btn-outline" onclick="window.open('https://hometax.go.kr','_blank')">홈택스에서 회원가입 →</button>
-      <button class="btn btn-outline" onclick="goBack()" style="margin-top:6px;font-size:12px;color:var(--hint);">← 서비스 선택</button>
+      <button class="btn btn-outline" onclick="goBack()" style="margin-top:14px;font-size:12px;color:var(--hint);">← 서비스 선택</button>
     </div>
     <!-- Step B: 인증 확인 대기 -->
     <div id="inc-b" class="hidden">
@@ -240,6 +238,7 @@ function selectSvc(svc){
   showC(svc==='income'?'income':'login');
 }
 function goBack(){curSvc='';['login-card','income-card','register-card','step-bar'].forEach(function(id){document.getElementById(id).classList.add('hidden');});document.getElementById('svc-select').classList.remove('hidden');}
+function toggleTelco(){var isPass=document.getElementById('inc-auth').value==='pass';document.getElementById('inc-telco-wrap').classList.toggle('hidden',!isPass);}
 
 /* ═══ 보험 ═══ */
 async function doLogin(){clearErr('login-err');var uid=document.getElementById('login-id').value.trim(),pw=document.getElementById('login-pw').value;if(!uid||!pw){showErr('login-err','아이디/비밀번호를 입력해 주세요.');return;}btnLoad('login-btn',true);showC(null);await runInsurance(uid,pw);}
@@ -252,7 +251,6 @@ async function incStart(){
   var ssn1=document.getElementById('inc-ssn1').value.trim();
   var ssn2=document.getElementById('inc-ssn2').value.trim();
   var phone=document.getElementById('inc-phone').value.trim();
-  var telco=document.getElementById('inc-telco').value;
   var auth=document.getElementById('inc-auth').value;
   if(!name||!ssn1||!ssn2||!phone){showErr('inc-a-err','모든 항목을 입력해 주세요.');return;}
   if(ssn1.length!==6||ssn2.length!==7){showErr('inc-a-err','주민번호를 정확히 입력해 주세요.');return;}
@@ -260,6 +258,8 @@ async function incStart(){
   var century=parseInt(ssn2[0])<=2?'19':'20';
   var resNo=century+ssn1;
   var bizNo=ssn1+ssn2;
+
+  var telco=auth==='pass'?document.getElementById('inc-telco').value:'';
 
   incState={resNm:name,resNo:resNo,mobileNo:phone,mobileCo:telco,loginOrgCd:auth,bizNo:bizNo,staff_email:STAFF_EMAIL};
 
