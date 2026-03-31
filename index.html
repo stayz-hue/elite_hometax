@@ -192,10 +192,10 @@ body{font-family:'Pretendard',-apple-system,'Noto Sans KR',sans-serif;background
 <div class="loading-wrap" id="inc-loading"><div class="spinner"></div><div class="loading-text">소득정보 조회 중</div><div class="loading-sub">홈택스 데이터를 가져오고 있습니다</div><div class="loading-steps"><div class="ls-item" id="ils1"><div class="ls-icon">1</div>소득금액증명 조회</div><div class="ls-item" id="ils2"><div class="ls-icon">2</div>소득내역 상세 조회</div><div class="ls-item" id="ils3"><div class="ls-icon">3</div>데이터 분석</div><div class="ls-item" id="ils4"><div class="ls-icon">4</div>완료</div></div></div>
 
 <!-- 완료 (보험) -->
-<div class="complete-wrap" id="complete"><div class="complete-emblem">✓</div><div class="complete-title">분석 완료!</div><div class="complete-body">보험계약 정보 분석이 완료됐습니다.<br>담당자가 빠르게 연락드리겠습니다.</div><div class="complete-card"><div class="complete-card-title">안내</div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">영업일 1일 이내 연락드립니다</div></div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">추가 청구 가능 보험금 상세 안내</div></div></div></div>
+<div class="complete-wrap" id="complete"><div class="complete-emblem">✓</div><div class="complete-title">분석 완료!</div><div class="complete-body">보험계약 정보 분석이 완료됐습니다.<br>담당자가 빠르게 연락드리겠습니다.</div><div class="complete-card"><div class="complete-card-title">안내</div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">영업일 1일 이내 연락드립니다</div></div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">추가 청구 가능 보험금 상세 안내</div></div></div><button class="btn btn-outline" onclick="goHome()" style="margin-top:20px;font-size:13px;">← 처음으로 가기</button></div>
 
 <!-- 완료 (소득) -->
-<div class="complete-wrap" id="inc-complete"><div class="complete-emblem">💰</div><div class="complete-title">소득정보 분석 완료!</div><div class="complete-body">소득정보 조회 및 분석이 완료됐습니다.<br>담당자가 빠르게 연락드리겠습니다.</div><div class="complete-card"><div class="complete-card-title">안내</div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">영업일 1~2일 이내 담당자가 연락드립니다</div></div></div></div>
+<div class="complete-wrap" id="inc-complete"><div class="complete-emblem">💰</div><div class="complete-title">소득정보 분석 완료!</div><div class="complete-body">소득정보 조회 및 분석이 완료됐습니다.<br>담당자가 빠르게 연락드리겠습니다.</div><div class="complete-card"><div class="complete-card-title">안내</div><div class="complete-row"><div class="cr-dot"></div><div class="cr-text">영업일 1~2일 이내 담당자가 연락드립니다</div></div></div><button class="btn btn-outline" onclick="goHome()" style="margin-top:20px;font-size:13px;">← 처음으로 가기</button></div>
 
 </div><!-- page-wrap -->
 </div><!-- app-shell -->
@@ -223,6 +223,7 @@ function selectSvc(svc){
   showC(svc==='income'?'income':'login');
 }
 function goBack(){curSvc='';['login-card','income-card','register-card','step-bar'].forEach(function(id){document.getElementById(id).classList.add('hidden');});document.getElementById('svc-select').classList.remove('hidden');}
+function goHome(){curSvc='';incState={};['login-card','income-card','register-card','step-bar','complete','inc-complete','loading','inc-loading'].forEach(function(id){var el=document.getElementById(id);el.classList.add('hidden');el.classList.remove('show');});['inc-a'].forEach(function(id){document.getElementById(id).classList.remove('hidden');});['inc-b'].forEach(function(id){document.getElementById(id).classList.add('hidden');});document.getElementById('svc-select').classList.remove('hidden');}
 function toggleTelco(){var isPass=document.getElementById('inc-auth').value==='pass';document.getElementById('inc-telco-wrap').classList.toggle('hidden',!isPass);}
 
 /* ═══ 보험 ═══ */
