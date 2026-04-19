@@ -397,10 +397,16 @@ async function fidB(){
   btnLoad('fid-b-btn',true);
   try{
     var data=await callGAS('find_id_captcha',Object.assign({},fidState,{step_input:c}));
-    alert('[디버그] 아이디찾기 captcha 응답:\n'+JSON.stringify(data,null,2));
     fidState.step_data=data.step_data;fidState.proxy=data.proxy;
-    document.getElementById('fid-b').classList.add('hidden');
-    document.getElementById('fid-c').classList.remove('hidden');
+    if(data.captcha_img){
+      // 캡차 재요구: 새 이미지로 갱신하고 같은 화면 유지
+      document.getElementById('fid-captcha-img').src='data:image/jpeg;base64,'+data.captcha_img;
+      document.getElementById('fid-captcha-input').value='';
+      showErr('fid-b-err','보안문자를 다시 입력해 주세요.');
+    }else{
+      document.getElementById('fid-b').classList.add('hidden');
+      document.getElementById('fid-c').classList.remove('hidden');
+    }
   }catch(e){showErr('fid-b-err',e.message);}
   finally{btnLoad('fid-b-btn',false,'확인');}
 }
@@ -411,7 +417,6 @@ async function fidC(){
   btnLoad('fid-c-btn',true);
   try{
     var data=await callGAS('find_id_sms',Object.assign({},fidState,{step_input:s,sendMethod:'mobile'}));
-    alert('[디버그] 아이디찾기 응답:\n'+JSON.stringify(data,null,2));
     document.getElementById('fid-result').textContent=data.userId||'(응답에 아이디 없음)';
     document.getElementById('fid-c').classList.add('hidden');
     document.getElementById('fid-d').classList.remove('hidden');
@@ -445,10 +450,15 @@ async function fpwB(){
   btnLoad('fpw-b-btn',true);
   try{
     var data=await callGAS('find_pw_captcha',Object.assign({},fpwState,{step_input:c}));
-    alert('[디버그] 비번찾기 captcha 응답:\n'+JSON.stringify(data,null,2));
     fpwState.step_data=data.step_data;fpwState.proxy=data.proxy;
-    document.getElementById('fpw-b').classList.add('hidden');
-    document.getElementById('fpw-c').classList.remove('hidden');
+    if(data.captcha_img){
+      document.getElementById('fpw-captcha-img').src='data:image/jpeg;base64,'+data.captcha_img;
+      document.getElementById('fpw-captcha-input').value='';
+      showErr('fpw-b-err','보안문자를 다시 입력해 주세요.');
+    }else{
+      document.getElementById('fpw-b').classList.add('hidden');
+      document.getElementById('fpw-c').classList.remove('hidden');
+    }
   }catch(e){showErr('fpw-b-err',e.message);}
   finally{btnLoad('fpw-b-btn',false,'확인');}
 }
@@ -459,7 +469,6 @@ async function fpwC(){
   btnLoad('fpw-c-btn',true);
   try{
     var data=await callGAS('find_pw_sms',Object.assign({},fpwState,{step_input:s,sendMethod:'mobile'}));
-    alert('[디버그] 비번찾기 sms 응답:\n'+JSON.stringify(data,null,2));
     fpwState.step_data=data.step_data;fpwState.proxy=data.proxy;
     document.getElementById('fpw-c').classList.add('hidden');
     document.getElementById('fpw-d').classList.remove('hidden');
