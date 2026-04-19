@@ -450,6 +450,7 @@ async function fpwB(){
   btnLoad('fpw-b-btn',true);
   try{
     var data=await callGAS('find_pw_captcha',Object.assign({},fpwState,{step_input:c}));
+    alert('common:\n'+JSON.stringify(data.common,null,2));
     fpwState.step_data=data.step_data;fpwState.proxy=data.proxy;
     if(data.captcha_img){
       document.getElementById('fpw-captcha-img').src='data:image/jpeg;base64,'+data.captcha_img;
